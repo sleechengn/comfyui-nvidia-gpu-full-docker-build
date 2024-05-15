@@ -1,4 +1,5 @@
-# comfyui-nvidia-gpu-base-docker-build
+# comfyui-nvidia-gpu-full-docker-build
+this only add plugins to comfyui-nvidia-gpu-base-docker-build
 linux comfyui with nvidia gpu support
 
 这是一个构建comfyui的Dockerfile项目，
