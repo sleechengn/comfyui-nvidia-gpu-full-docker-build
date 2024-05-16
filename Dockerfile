@@ -79,6 +79,3 @@ ENTRYPOINT /init.sh
 
 RUN python3.11 -m pip cache purge
 RUN apt autoremove
-
-VOLUME /opt/ComfyUI/models
-VOLUME /opt/ComfyUI/custom_nodes
