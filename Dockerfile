@@ -40,8 +40,6 @@ RUN python3.11 -m pip install -r requirements.txt --extra-index-url https://down
 
 WORKDIR /opt/ComfyUI/custom_nodes
 RUN git clone https://github.com/Kosinkadink/ComfyUI-AnimateDiff-Evolved
-#WORKDIR /opt/ComfyUI/custom_nodes/ComfyUI-AnimateDiff-Evolved
-#RUN python3.11 -m pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cu121
 
 WORKDIR /opt/ComfyUI/custom_nodes
 RUN git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite
@@ -50,8 +48,6 @@ RUN python3.11 -m pip install -r requirements.txt --extra-index-url https://down
 
 WORKDIR /opt/ComfyUI/custom_nodes
 RUN git clone https://github.com/ZHO-ZHO-ZHO/ComfyUI-BRIA_AI-RMBG
-#WORKDIR /opt/ComfyUI/custom_nodes/ComfyUI-BRIA_AI-RMBG
-#RUN python3.11 -m pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cu121
 
 RUN apt -y install python3.11-dev 
 
@@ -59,6 +55,22 @@ WORKDIR /opt/ComfyUI/custom_nodes
 RUN git clone https://github.com/cubiq/ComfyUI_InstantID
 WORKDIR /opt/ComfyUI/custom_nodes/ComfyUI_InstantID
 RUN python3.11 -m pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cu121
+
+WORKDIR /opt/ComfyUI/custom_nodes
+RUN git clone https://github.com/pythongosssss/ComfyUI-Custom-Scripts
+
+WORKDIR /opt/ComfyUI/custom_nodes
+RUN git clone https://github.com/cubiq/ComfyUI_IPAdapter_plus
+
+WORKDIR /opt/ComfyUI/custom_nodes
+RUN git clone https://github.com/AIGODLIKE/AIGODLIKE-COMFYUI-TRANSLATION
+
+WORKDIR /opt/ComfyUI/custom_nodes
+RUN git clone https://github.com/crystian/ComfyUI-Crystools
+WORKDIR /opt/ComfyUI/custom_nodes/ComfyUI-Crystools
+RUN python3.11 -m pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cu121
+
+
 
 # clean cache
 RUN ls -l
