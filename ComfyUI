@@ -13,18 +13,24 @@ server {
 		proxy_http_version 1.1;
 		proxy_set_header Upgrade $http_upgrade;
 	        proxy_set_header Connection $connection_upgrade;
+		proxy_read_timeout 3600s;
+		proxy_send_timeout 3600s;
         }
 	location /filebrowser {
                 proxy_pass http://127.0.0.1:81/filebrowser;
                 proxy_http_version 1.1;
                 proxy_set_header Upgrade $http_upgrade;
                 proxy_set_header Connection $connection_upgrade;
+proxy_read_timeout 3600s;
+proxy_send_timeout 3600s;
         }
 	location /ttyd {
                 proxy_pass http://127.0.0.1:82/ttyd;
                 proxy_http_version 1.1;
                 proxy_set_header Upgrade $http_upgrade;
                 proxy_set_header Connection $connection_upgrade;
+proxy_read_timeout 3600s;
+proxy_send_timeout 3600s;
         }
 
 }

@@ -70,6 +70,25 @@ RUN git clone https://github.com/crystian/ComfyUI-Crystools
 WORKDIR /opt/ComfyUI/custom_nodes/ComfyUI-Crystools
 RUN python3.11 -m pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cu121
 
+#WORKDIR /opt/ComfyUI/custom_nodes
+#RUN git clone https://github.com/ZHO-ZHO-ZHO/ComfyUI-YoloWorld-EfficientSAM
+#WORKDIR /opt/ComfyUI/custom_nodes/ComfyUI-YoloWorld-EfficientSAM
+#RUN python3.11 -m pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cu121
+
+WORKDIR /opt/ComfyUI/custom_nodes
+RUN git clone https://github.com/storyicon/comfyui_segment_anything
+WORKDIR /opt/ComfyUI/custom_nodes/comfyui_segment_anything
+RUN python3.11 -m pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cu121
+
+WORKDIR /opt/ComfyUI/custom_nodes
+RUN git clone https://github.com/Kosinkadink/ComfyUI-Advanced-ControlNet
+WORKDIR /opt/ComfyUI/custom_nodes/ComfyUI-Advanced-ControlNet
+RUN python3.11 -m pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cu121
+
+WORKDIR /opt/ComfyUI/custom_nodes
+RUN git clone https://github.com/yolain/ComfyUI-Easy-Use
+WORKDIR /opt/ComfyUI/custom_nodes/ComfyUI-Easy-Use
+RUN python3.11 -m pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cu121
 
 
 # clean cache
