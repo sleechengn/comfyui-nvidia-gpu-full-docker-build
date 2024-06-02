@@ -23,6 +23,7 @@ RUN git clone https://github.com/storyicon/comfyui_segment_anything
 RUN git clone https://github.com/Kosinkadink/ComfyUI-Advanced-ControlNet
 RUN git clone https://github.com/rgthree/rgthree-comfy
 RUN git clone https://github.com/yolain/ComfyUI-Easy-Use
+RUN git clone https://github.com/huchenlei/ComfyUI-layerdiffuse
 
 CMD ["/usr/bin/bash"]
 
@@ -59,7 +60,7 @@ RUN chmod +x /opt/combine.sh
 #RUN ls -l /opt/ComfyUI/custom_nodes/*/requirements.txt -l|awk '{print $9}'|xargs -i /opt/combine.sh {} /opt/requirements.txt
 RUN find /opt/ComfyUI/custom_nodes|grep requirements.txt|grep -v /src/|xargs -i /opt/combine.sh {} /opt/requirements.txt
 
-RUN python3.11 -m pip install --extra-index-url=https://download.pytorch.org/whl/cu121 --target=/opt/ComfyUI/python-lib async_timeout inference -r /opt/requirements.txt
+RUN python3.11 -m pip install --extra-index-url=https://download.pytorch.org/whl/cu121 --target=/opt/ComfyUI/python-lib async_timeout -r /opt/requirements.txt
 
 CMD ["/usr/bin/bash"]
 
@@ -98,6 +99,8 @@ RUN chmod +x /install.sh
 ENTRYPOINT /init.sh
 
 WORKDIR /opt/ComfyUI
-ENV ROOT_PASSWORD=root
-VOLUME /opt/ComfyUI
 
+ENV ROOT_PASSWORD=root
+
+VOLUME /opt/ComfyUI
+VOLUME /opt/ComfyUI/models
