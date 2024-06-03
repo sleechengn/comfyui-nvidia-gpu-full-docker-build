@@ -12,6 +12,6 @@ nohup ttyd --port 82 --base-path /ttyd /usr/bin/bash > /dev/null &
 
 cd /opt/ComfyUI
 
-echo "use launch $*"
+echo "use $*"
 
 python3.11 main.py $*
