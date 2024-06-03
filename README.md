@@ -164,26 +164,47 @@ networks:
   lan:
     external: true
     name: "lan"
+volumes:
+  comyui-base:
+    name: comyui-base
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /opt/apps/comfyui
+  comyui-models:
+    name: comyui-models
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /opt/apps/comfyui-models
 services:
   comfyui:
     container_name: "comfyui"
     hostname: "comfyui"
     image: "sleechengn/comfyui:nvidia-gpu-full"
     restart: always
-    # if vram lower than 6G use command
-    # command: ["--lowvram"]
     environment:
       - PUID=0
       - PGID=0
       - TZ=Asia/Shanghai
       - NVIDIA_DRIVER_CAPABILITIES=all
       - NVIDIA_VISIBLE_DEVICES=all
+#    if vram lower 6G, use command, this command will be send to comfyui main.py args 
+#    command: ["--lowvram"]
+    volumes:
+      - comyui-base:/opt/ComfyUI
+      - comyui-models:/opt/ComfyUI/models
+#    memswap_limit: 16G
     runtime: nvidia
     networks:
       lan:
         ipv4_address: 192.168.13.76
     deploy:
       resources:
+#        limits:
+#          memory: 16G
         reservations:
           devices:
             - capabilities: [ gpu ]
