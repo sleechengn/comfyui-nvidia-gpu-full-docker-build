@@ -170,6 +170,8 @@ services:
     hostname: "comfyui"
     image: "sleechengn/comfyui:nvidia-gpu-full"
     restart: always
+    # if vram lower than 6G use command
+    # command: ["--lowvram"]
     environment:
       - PUID=0
       - PGID=0
