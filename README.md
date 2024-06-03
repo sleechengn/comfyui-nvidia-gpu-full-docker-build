@@ -131,6 +131,7 @@ If no errors occur and everything is normal, the installation is successful.
 
 Run the script as follows:
 ```
+# setup docker
 apt install -y apt-transport-https ca-certificates curl software-properties-common gnupg lsb-release
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
@@ -139,6 +140,7 @@ apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 systemctl enable docker
 systemctl start docker
 
+# setup nvidia runtime for docker
 curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \
  && curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
    sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
@@ -147,7 +149,11 @@ curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dear
 #nvidia-container-toolkit
 apt update
 apt install -y nvidia-container-toolkit
-touch /etc/docker/daemon.json
+# important if /etc/docker/daemon.json not exists，please create and put content {} into
+# nano /etc/docker/daemon.json
+# content is json string:  {}
+# and save
+
 nvidia-ctk runtime configure --runtime=docker
 
 systemctl restart docker
