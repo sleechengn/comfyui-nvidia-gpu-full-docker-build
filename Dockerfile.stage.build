@@ -96,7 +96,8 @@ RUN chmod +x /init.sh
 COPY ./install.sh /
 RUN chmod +x /install.sh
 
-ENTRYPOINT /init.sh
+ENTRYPOINT ["/init.sh"]
+CMD []
 
 WORKDIR /opt/ComfyUI
 
