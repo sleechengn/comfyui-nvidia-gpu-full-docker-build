@@ -11,4 +11,4 @@ nohup filebrowser -d /opt/filebrowser/filebrowser.db -a 127.0.0.1 -p 81 -b /file
 nohup ttyd --port 82 --base-path /ttyd /usr/bin/bash > /dev/null &
 
 cd /opt/ComfyUI
-python3.11 main.py --lowvram
+python3.11 main.py $*

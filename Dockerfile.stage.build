@@ -104,3 +104,4 @@ ENV ROOT_PASSWORD=root
 
 VOLUME /opt/ComfyUI
 VOLUME /opt/ComfyUI/models
+VOLUME /opt/ComfyUI/custom_nodes/comfyui_controlnet_aux/ckpts
