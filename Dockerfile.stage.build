@@ -24,6 +24,7 @@ RUN git clone https://github.com/Kosinkadink/ComfyUI-Advanced-ControlNet
 RUN git clone https://github.com/rgthree/rgthree-comfy
 RUN git clone https://github.com/yolain/ComfyUI-Easy-Use
 RUN git clone https://github.com/huchenlei/ComfyUI-layerdiffuse
+RUN git clone https://github.com/ltdrdata/ComfyUI-Impact-Pack
 
 CMD ["/usr/bin/bash"]
 
