@@ -22,8 +22,10 @@ RUN git clone https://github.com/crystian/ComfyUI-Crystools
 RUN git clone https://github.com/storyicon/comfyui_segment_anything
 RUN git clone https://github.com/Kosinkadink/ComfyUI-Advanced-ControlNet
 RUN git clone https://github.com/rgthree/rgthree-comfy
+#RUN git clone http://192.168.13.80/sleechengn/rgthree-comfy
 RUN git clone https://github.com/yolain/ComfyUI-Easy-Use
 RUN git clone https://github.com/huchenlei/ComfyUI-layerdiffuse
+RUN git clone https://github.com/comfyanonymous/ComfyUI_TensorRT
 RUN git clone https://github.com/ltdrdata/ComfyUI-Impact-Pack
 RUN git clone https://github.com/kijai/ComfyUI-SUPIR
 RUN git clone https://github.com/ltdrdata/ComfyUI-Inspire-Pack
@@ -61,7 +63,7 @@ COPY ./combine.sh /opt/combine.sh
 RUN chmod +x /opt/combine.sh
 
 #RUN ls -l /opt/ComfyUI/custom_nodes/*/requirements.txt -l|awk '{print $9}'|xargs -i /opt/combine.sh {} /opt/requirements.txt
-RUN find /opt/ComfyUI/custom_nodes|grep requirements.txt|grep -v /src/|xargs -i /opt/combine.sh {} /opt/requirements.txt
+RUN find /opt/ComfyUI/custom_nodes|grep requirements.txt|grep -v /src/|grep -v /tests/|xargs -i /opt/combine.sh {} /opt/requirements.txt
 
 RUN python3.11 -m pip install --extra-index-url=https://download.pytorch.org/whl/cu121 --target=/opt/ComfyUI/python-lib async_timeout -r /opt/requirements.txt
 
