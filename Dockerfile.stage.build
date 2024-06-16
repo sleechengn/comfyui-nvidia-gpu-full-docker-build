@@ -1,100 +1,27 @@
 FROM ubuntu:jammy as build-comfyui
-
-RUN apt update
-RUN apt -y install git
-
-WORKDIR /opt
-RUN git clone https://github.com/comfyanonymous/ComfyUI
-
-WORKDIR /opt/ComfyUI/custom_nodes
-RUN git clone https://github.com/ltdrdata/ComfyUI-Manager
-RUN git clone https://github.com/Fannovel16/comfyui_controlnet_aux
-RUN git clone https://github.com/AlekPet/ComfyUI_Custom_Nodes_AlekPet
-RUN git clone https://github.com/FizzleDorf/ComfyUI_FizzNodes
-RUN git clone https://github.com/Kosinkadink/ComfyUI-AnimateDiff-Evolved
-RUN git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite
-RUN git clone https://github.com/ZHO-ZHO-ZHO/ComfyUI-BRIA_AI-RMBG
-RUN git clone https://github.com/cubiq/ComfyUI_InstantID
-RUN git clone https://github.com/pythongosssss/ComfyUI-Custom-Scripts
-RUN git clone https://github.com/cubiq/ComfyUI_IPAdapter_plus
-RUN git clone https://github.com/AIGODLIKE/AIGODLIKE-COMFYUI-TRANSLATION
-RUN git clone https://github.com/crystian/ComfyUI-Crystools
-RUN git clone https://github.com/storyicon/comfyui_segment_anything
-RUN git clone https://github.com/Kosinkadink/ComfyUI-Advanced-ControlNet
-RUN git clone https://github.com/rgthree/rgthree-comfy
-#RUN git clone http://192.168.13.80/sleechengn/rgthree-comfy
-RUN git clone https://github.com/yolain/ComfyUI-Easy-Use
-RUN git clone https://github.com/huchenlei/ComfyUI-layerdiffuse
-RUN git clone https://github.com/comfyanonymous/ComfyUI_TensorRT
-RUN git clone https://github.com/ltdrdata/ComfyUI-Impact-Pack
-RUN git clone https://github.com/kijai/ComfyUI-SUPIR
-RUN git clone https://github.com/ltdrdata/ComfyUI-Inspire-Pack
-
+COPY ./stage-comfyui.sh /opt/
+RUN /usr/bin/bash /opt/stage-comfyui.sh
 CMD ["/usr/bin/bash"]
-
-
-
-
-
-
-
-
-
 
 
 FROM ubuntu:jammy as build-libs
-
-RUN apt update
-RUN apt -y remove python*
-RUN apt -y autoremove
-RUN apt install -y git python3.11 python3-pip python3.11-dev ffmpeg
-
-WORKDIR /opt
 COPY --from=build-comfyui /opt/ComfyUI /opt/ComfyUI
-
-RUN mkdir /opt/ComfyUI/python-lib
-RUN echo "/opt/ComfyUI/python-lib" > /usr/local/lib/python3.11/dist-packages/python3_path.pth
-RUN python3.11 -m pip install --extra-index-url=https://download.pytorch.org/whl/cu121 --target=/opt/ComfyUI/python-lib -r /opt/ComfyUI/requirements.txt
-
-#RUN ls -l /opt/ComfyUI/custom_nodes/*/requirements.txt -l|awk '{print $9}'|xargs -i  python3.11 -m pip install --extra-index-url=https://download.pytorch.org/whl/cu121 --target=/opt/ComfyUI/python-lib -r {}
-#RUN python3.11 -m pip install --extra-index-url=https://download.pytorch.org/whl/cu121 --target=/opt/ComfyUI/python-lib async_timeout inference==0.10.0
-
 COPY ./combine.sh /opt/combine.sh
-RUN chmod +x /opt/combine.sh
-
-#RUN ls -l /opt/ComfyUI/custom_nodes/*/requirements.txt -l|awk '{print $9}'|xargs -i /opt/combine.sh {} /opt/requirements.txt
-RUN find /opt/ComfyUI/custom_nodes|grep requirements.txt|grep -v /src/|grep -v /tests/|xargs -i /opt/combine.sh {} /opt/requirements.txt
-
-RUN python3.11 -m pip install --extra-index-url=https://download.pytorch.org/whl/cu121 --target=/opt/ComfyUI/python-lib async_timeout -r /opt/requirements.txt
-
+COPY ./stage-libs-apt.sh /opt/
+RUN /usr/bin/bash /opt/stage-libs-apt.sh
+COPY ./stage-libs-comfyui.sh /opt/
+RUN /usr/bin/bash /opt/stage-libs-comfyui.sh
+COPY ./stage-libs-ext.sh /opt/
+RUN /usr/bin/bash /opt/stage-libs-ext.sh
 CMD ["/usr/bin/bash"]
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 FROM ubuntu:jammy as prod
-
 ADD ./settings.sh /opt/
 RUN chmod +x /opt/settings.sh && /opt/settings.sh && rm -rf /opt/settings.sh
-
 COPY --from=build-libs /opt/ComfyUI /opt/ComfyUI
-
 RUN echo "/opt/ComfyUI/python-lib" > /usr/local/lib/python3.11/dist-packages/python3_path.pth
-
 ADD ./ComfyUI /etc/nginx/sites-enabled/
-
 # setup and initialize
 COPY ./init.sh /
 RUN chmod +x /init.sh
