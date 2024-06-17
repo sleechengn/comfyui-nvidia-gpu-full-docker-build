@@ -1,7 +1,4 @@
 #!/usr/bin/bash
-while read line
-do
-    echo $line >> $2
-done < $1
-
+cat $1 >> $2
 echo -e '\n' >> $2
+
