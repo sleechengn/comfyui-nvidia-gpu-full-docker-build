@@ -3,18 +3,33 @@ COPY ./stage-comfyui.sh /opt/
 RUN /usr/bin/bash /opt/stage-comfyui.sh
 CMD ["/usr/bin/bash"]
 
-
 FROM ubuntu:jammy as build-libs
+
 COPY --from=build-comfyui /opt/ComfyUI /opt/ComfyUI
 COPY ./combine.sh /opt/combine.sh
 COPY ./stage-libs-apt.sh /opt/
+
 RUN /usr/bin/bash /opt/stage-libs-apt.sh
+
 COPY ./stage-libs-comfyui.sh /opt/
 RUN /usr/bin/bash /opt/stage-libs-comfyui.sh
+
 COPY ./stage-libs-ext.sh /opt/
 RUN /usr/bin/bash /opt/stage-libs-ext.sh
-CMD ["/usr/bin/bash"]
 
+COPY ./stage-plugin-x-flux-comfyui.sh /opt/
+RUN /usr/bin/bash /opt/stage-plugin-x-flux-comfyui.sh
+
+COPY ./stage-plugin-segment-anything2.sh /opt/
+RUN /usr/bin/bash /opt/stage-plugin-segment-anything2.sh
+
+COPY ./stage-plugin-ComfyUI-MimicMotion.sh /opt/
+RUN /usr/bin/bash /opt/stage-plugin-ComfyUI-MimicMotion.sh
+
+COPY ./stage-plugin-ComfyUI-CogVideoXWrapper.sh /opt/
+RUN /usr/bin/bash /opt/stage-plugin-ComfyUI-CogVideoXWrapper.sh
+
+CMD ["/usr/bin/bash"]
 
 FROM ubuntu:jammy as prod
 ADD ./settings.sh /opt/

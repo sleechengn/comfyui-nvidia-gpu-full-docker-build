@@ -21,8 +21,10 @@ chmod +x /opt/combine.sh
 find /opt/ComfyUI/custom_nodes|grep requirements.txt|grep -v /src/|grep -v /tests/|xargs -i /opt/combine.sh {} /opt/requirements.txt
 
 #origin
-#python3.11 -m pip install --extra-index-url=https://download.pytorch.org/whl/cu121 --target=/opt/ComfyUI/python-lib async_timeout ultralytics!=8.2.5 diffusers==0.25.0 -r /opt/requirements.txt
-python3.11 -m pip install --timeout 10000 --use-deprecated=html5lib --trusted-host 192.168.13.81 \
-	--index-url=http://192.168.13.81:8081/repository/pip-lan/simple \
-	--extra-index-url=http://192.168.13.81:8081/repository/pip-cu121 \
-	--target=/opt/ComfyUI/python-lib async_timeout ultralytics!=8.2.5 diffusers==0.25.0 -r /opt/requirements.txt
+python3.11 -m pip install --extra-index-url=https://download.pytorch.org/whl/cu121 --target=/opt/ComfyUI/python-lib async_timeout ultralytics!=8.2.5 diffusers -r /opt/requirements.txt
+python3.11 -m pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-GGUF/requirements.txt --force --upgrade --target=/opt/ComfyUI/python-lib
+
+#python3.11 -m pip install --timeout 10000 --use-deprecated=html5lib --trusted-host 192.168.13.81 \
+#        --index-url=http://192.168.13.81:8081/repository/pip-lan/simple \
+#        --extra-index-url=http://192.168.13.81:8081/repository/pip-cu121 \
+#        --target=/opt/ComfyUI/python-lib async_timeout ultralytics!=8.2.5 diffusers -r /opt/requirements.txt
