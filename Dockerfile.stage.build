@@ -29,6 +29,18 @@ RUN /usr/bin/bash /opt/stage-plugin-ComfyUI-MimicMotion.sh
 COPY ./stage-plugin-ComfyUI-CogVideoXWrapper.sh /opt/
 RUN /usr/bin/bash /opt/stage-plugin-ComfyUI-CogVideoXWrapper.sh
 
+COPY ./stage-fix-xformers.sh /opt/
+RUN /usr/bin/bash /opt/stage-fix-xformers.sh
+
+COPY ./stage-plugin-ComfyUI-KJNodes.sh /opt/
+RUN /usr/bin/bash /opt/stage-plugin-ComfyUI-KJNodes.sh
+
+COPY ./stage-plugin-ComfyUI_essentials.sh /opt/
+RUN /usr/bin/bash /opt/stage-plugin-ComfyUI_essentials.sh
+
+COPY ./stage-fix-numpy.sh /opt/
+RUN /usr/bin/sh /opt/stage-fix-numpy.sh
+
 CMD ["/usr/bin/bash"]
 
 FROM ubuntu:jammy as prod
@@ -53,3 +65,4 @@ ENV ROOT_PASSWORD=root
 VOLUME /opt/ComfyUI
 VOLUME /opt/ComfyUI/models
 VOLUME /opt/ComfyUI/custom_nodes/comfyui_controlnet_aux/ckpts
+VOLUME /opt/ComfyUI/custom_nodes/ComfyUI-MimicMotion/models
