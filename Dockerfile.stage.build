@@ -50,6 +50,9 @@ RUN /usr/bin/bash /opt/stage-plugin-comfyui-various.sh
 COPY ./stage-fix-numpy.sh /opt/
 RUN /usr/bin/sh /opt/stage-fix-numpy.sh
 
+COPY ./stage-fix-impact.sh /opt/
+RUN /usr/bin/sh /opt/stage-fix-impact.sh
+
 CMD ["/usr/bin/bash"]
 
 FROM ubuntu:jammy as prod
