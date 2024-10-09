@@ -38,6 +38,15 @@ RUN /usr/bin/bash /opt/stage-plugin-ComfyUI-KJNodes.sh
 COPY ./stage-plugin-ComfyUI_essentials.sh /opt/
 RUN /usr/bin/bash /opt/stage-plugin-ComfyUI_essentials.sh
 
+COPY ./stage-plugin-ComfyUI-YOLO.sh /opt/
+RUN /usr/bin/bash /opt/stage-plugin-ComfyUI-YOLO.sh
+
+COPY ./stage-plugin-stability-ComfyUI-nodes.sh /opt/
+RUN /usr/bin/bash /opt/stage-plugin-stability-ComfyUI-nodes.sh
+
+COPY ./stage-plugin-comfyui-various.sh /opt/
+RUN /usr/bin/bash /opt/stage-plugin-comfyui-various.sh
+
 COPY ./stage-fix-numpy.sh /opt/
 RUN /usr/bin/sh /opt/stage-fix-numpy.sh
 
