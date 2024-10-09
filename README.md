@@ -185,28 +185,74 @@ volumes:
       o: bind
       type: none
       device: /opt/apps/comfyui-models
+  comfyui-cn-processor:
+    name: comfyui-cn-processor
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /opt/apps/comfyui-cn-processor
+  comfyui-input:
+    name: comfyui-input
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /opt/apps/comfyui-input
+  comfyui-output:
+    name: comfyui-output
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /opt/apps/comfyui-output
+  comfyui-huggingface_hub:
+    name: comfyui-huggingface_hub
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /opt/apps/comfyui-huggingface_hub
+  comfyui-mimic-motion-models:
+    name: comfyui-mimic-motion-models
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /opt/apps/comfyui-mimic-motion-models
 services:
   comfyui:
     container_name: "comfyui"
     hostname: "comfyui"
     image: "sleechengn/comfyui:nvidia-gpu-full"
     restart: always
+    #build:
+    #  context: .
+    #  shm_size: 16g
+    #shm_size: 16g
+    ipc: host
+    ports:
+      - "8080:80"
     environment:
       - PUID=0
       - PGID=0
       - TZ=Asia/Shanghai
       - NVIDIA_DRIVER_CAPABILITIES=all
       - NVIDIA_VISIBLE_DEVICES=all
-#    if vram lower 6G, use command, this command will be send to comfyui main.py args 
-#    command: ["--lowvram"]
+      - HF_HOME=/opt/huggingface_hub
+      - HF_ENDPOINT=https://hf-mirror.com
+    #command: ["--lowvram", "--preview-method", "auto", "--use-split-cross-attention"]
+    command: ["--lowvram", "--front-end-version", "latest", "--listen", "0.0.0.0", "--disable-smart-memory","--enable-cors-header" ,"'*'"]
     volumes:
       - comyui-base:/opt/ComfyUI
       - comyui-models:/opt/ComfyUI/models
+      - comfyui-cn-processor:/opt/ComfyUI/custom_nodes/comfyui_controlnet_aux/ckpts
+      - comfyui-output:/opt/ComfyUI/output
+      - comfyui-input:/opt/ComfyUI/input
+      - comfyui-huggingface_hub:/opt/huggingface_hub
+      - comfyui-mimic-motion-models:/opt/ComfyUI/custom_nodes/ComfyUI-MimicMotion/models
 #    memswap_limit: 16G
     runtime: nvidia
-    networks:
-      lan:
-        ipv4_address: 192.168.13.76
     deploy:
       resources:
 #        limits:
