@@ -70,8 +70,3 @@ git clone https://github.com/ltdrdata/ComfyUI-Inspire-Pack
 #git clone http://192.168.13.80:80/sleechengn/ComfyUI-Inspire-Pack
 git clone https://github.com/city96/ComfyUI-GGUF
 #git clone http://192.168.13.80/sleechengn/ComfyUI-GGUF
-
-#if [ ! -d "/opt/ComfyUI/models/sams" ]; then
-#  mkdir /opt/ComfyUI/models/sams
-#fi
-#curl -o /opt/ComfyUI/models/sams/sam_vit_b_01ec64.pth https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth
