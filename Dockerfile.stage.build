@@ -72,6 +72,12 @@ RUN /usr/bin/sh /opt/stage-plugin-ComfyUI_kkTranslator_nodes.sh
 COPY ./stage-plugin-ComfyUI-PyramidFlowWrapper.sh /opt/
 RUN /usr/bin/sh /opt/stage-plugin-ComfyUI-PyramidFlowWrapper.sh
 
+COPY ./stage-plugin-ComfyUI-WD14-Tagger.sh /opt/
+RUN /usr/bin/sh /opt/stage-plugin-ComfyUI-WD14-Tagger.sh
+
+COPY ./stage-plugin-comfyui-inpaint-nodes.sh /opt/
+RUN /usr/bin/sh /opt/stage-plugin-comfyui-inpaint-nodes.sh
+
 COPY ./stage-fix-numpy.sh /opt/
 RUN /usr/bin/sh /opt/stage-fix-numpy.sh
 
