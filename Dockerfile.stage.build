@@ -69,6 +69,9 @@ RUN /usr/bin/sh /opt/stage-plugin-comfyui-reactor-node.sh
 COPY ./stage-plugin-ComfyUI_kkTranslator_nodes.sh /opt/
 RUN /usr/bin/sh /opt/stage-plugin-ComfyUI_kkTranslator_nodes.sh
 
+COPY ./stage-plugin-ComfyUI-PyramidFlowWrapper.sh /opt/
+RUN /usr/bin/sh /opt/stage-plugin-ComfyUI-PyramidFlowWrapper.sh
+
 COPY ./stage-fix-numpy.sh /opt/
 RUN /usr/bin/sh /opt/stage-fix-numpy.sh
 
@@ -100,3 +103,4 @@ VOLUME /opt/ComfyUI
 VOLUME /opt/ComfyUI/models
 VOLUME /opt/ComfyUI/custom_nodes/comfyui_controlnet_aux/ckpts
 VOLUME /opt/ComfyUI/custom_nodes/ComfyUI-MimicMotion/models
+VOLUME /usr/local/lib/python3.11/dist-packages
