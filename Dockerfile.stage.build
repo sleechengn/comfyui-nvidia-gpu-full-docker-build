@@ -81,8 +81,14 @@ RUN /usr/bin/sh /opt/stage-plugin-comfyui-inpaint-nodes.sh
 COPY ./stage-plugin-cg-use-everywhere.sh /opt/
 RUN /usr/bin/sh /opt/stage-plugin-cg-use-everywhere.sh
 
+COPY ./stage-plugin-MotionDiff.sh /opt/
+RUN /usr/bin/sh /opt/stage-plugin-MotionDiff.sh
+
 COPY ./stage-fix-numpy.sh /opt/
 RUN /usr/bin/sh /opt/stage-fix-numpy.sh
+
+COPY ./stage-fix-torchaudio.sh /opt/
+RUN /usr/bin/sh /opt/stage-fix-torchaudio.sh
 
 CMD ["/usr/bin/bash"]
 
