@@ -7,7 +7,7 @@ fi
 /usr/sbin/sshd
 /usr/sbin/nginx
 
-nohup filebrowser -d /opt/filebrowser/filebrowser.db -a 127.0.0.1 -p 81 -b /filebrowser -r /opt/ComfyUI/ --noauth > /dev/null &
+nohup filebrowser -d /opt/filebrowser/filebrowser.db -a 127.0.0.1 -p 81 -b /filebrowser -r / --noauth > /dev/null &
 nohup ttyd --port 82 --base-path /ttyd /usr/bin/bash > /dev/null &
 
 cd /opt/ComfyUI
