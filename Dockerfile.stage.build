@@ -57,9 +57,6 @@ RUN /usr/bin/sh /opt/stage-plugin-ComfyUI-Long-CLIP.sh
 COPY ./stage-plugin-ComfyUI-Frame-Interpolation.sh /opt/
 RUN /usr/bin/sh /opt/stage-plugin-ComfyUI-Frame-Interpolation.sh
 
-COPY ./stage-install-impact.sh /opt/
-RUN /usr/bin/sh /opt/stage-install-impact.sh
-
 COPY ./stage-plugin-ComfyUI-Prompt-Translator.sh /opt/
 RUN /usr/bin/sh /opt/stage-plugin-ComfyUI-Prompt-Translator.sh
 
@@ -81,8 +78,20 @@ RUN /usr/bin/sh /opt/stage-plugin-comfyui-inpaint-nodes.sh
 COPY ./stage-plugin-cg-use-everywhere.sh /opt/
 RUN /usr/bin/sh /opt/stage-plugin-cg-use-everywhere.sh
 
+COPY ./stage-plugin-ComfyUI_CatVTON_Wrapper.sh /opt/
+RUN /usr/bin/sh /opt/stage-plugin-ComfyUI_CatVTON_Wrapper.sh
+
 COPY ./stage-plugin-MotionDiff.sh /opt/
 RUN /usr/bin/sh /opt/stage-plugin-MotionDiff.sh
+
+COPY ./stage-plugin-SD-Latent-Interposer.sh /opt/
+RUN /usr/bin/sh /opt/stage-plugin-SD-Latent-Interposer.sh
+
+COPY ./stage-plugin-ComfyUI-FreeMemory.sh /opt/
+RUN /usr/bin/sh /opt/stage-plugin-ComfyUI-FreeMemory.sh
+
+COPY ./stage-fix-impact.sh /opt/
+RUN /usr/bin/sh /opt/stage-fix-impact.sh
 
 COPY ./stage-fix-numpy.sh /opt/
 RUN /usr/bin/sh /opt/stage-fix-numpy.sh
