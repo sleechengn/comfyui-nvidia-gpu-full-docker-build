@@ -1,2 +1,2 @@
 #!/usr/bin/bash
-python3.11 -m pip install --extra-index-url=https://download.pytorch.org/whl/cu124 torchaudio
+python3.11 -m pip install torchaudio

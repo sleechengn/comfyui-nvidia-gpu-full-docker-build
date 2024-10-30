@@ -60,7 +60,7 @@ git clone https://github.com/huchenlei/ComfyUI-layerdiffuse
 
 #git clone https://github.com/comfyanonymous/ComfyUI_TensorRT
 
-git clone https://github.com/ltdrdata/ComfyUI-Impact-Pack
+#git clone https://github.com/ltdrdata/ComfyUI-Impact-Pack
 #git clone http://192.168.13.80:80/sleechengn/ComfyUI-Impact-Pack
 
 git clone https://github.com/kijai/ComfyUI-SUPIR

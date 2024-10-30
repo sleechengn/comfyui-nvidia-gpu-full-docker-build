@@ -1,4 +1,5 @@
 FROM ubuntu:jammy AS build-comfyui
+ENV PIP_EXTRA_INDEX_URL=https://download.pytorch.org/whl/cu124
 
 COPY ./stage-comfyui.sh /opt/
 RUN /usr/bin/bash /opt/stage-comfyui.sh
@@ -8,6 +9,7 @@ CMD ["/usr/bin/bash"]
 
 
 FROM ubuntu:jammy AS build-libs
+ENV PIP_EXTRA_INDEX_URL=https://download.pytorch.org/whl/cu124
 
 COPY --from=build-comfyui /opt/ComfyUI /opt/ComfyUI
 COPY ./combine.sh /opt/combine.sh
@@ -90,8 +92,11 @@ RUN /usr/bin/sh /opt/stage-plugin-SD-Latent-Interposer.sh
 COPY ./stage-plugin-ComfyUI-FreeMemory.sh /opt/
 RUN /usr/bin/sh /opt/stage-plugin-ComfyUI-FreeMemory.sh
 
-COPY ./stage-fix-impact.sh /opt/
-RUN /usr/bin/sh /opt/stage-fix-impact.sh
+COPY ./stage-plugin-impact.sh /opt/
+RUN /usr/bin/sh /opt/stage-plugin-impact.sh
+
+COPY ./stage-plugin-ComfyUI-CogVideoX-MZ.sh /opt/
+RUN /usr/bin/sh /opt/stage-plugin-ComfyUI-CogVideoX-MZ.sh
 
 COPY ./stage-fix-numpy.sh /opt/
 RUN /usr/bin/sh /opt/stage-fix-numpy.sh
@@ -99,11 +104,15 @@ RUN /usr/bin/sh /opt/stage-fix-numpy.sh
 COPY ./stage-fix-torchaudio.sh /opt/
 RUN /usr/bin/sh /opt/stage-fix-torchaudio.sh
 
+COPY ./stage-fix-SageAttention.sh /opt/
+RUN /usr/bin/sh /opt/stage-fix-SageAttention.sh
+
 CMD ["/usr/bin/bash"]
 
 
 
 FROM ubuntu:jammy AS prod
+ENV PIP_EXTRA_INDEX_URL=https://download.pytorch.org/whl/cu124
 
 ADD ./settings.sh /opt/
 RUN chmod +x /opt/settings.sh && /opt/settings.sh && rm -rf /opt/settings.sh
