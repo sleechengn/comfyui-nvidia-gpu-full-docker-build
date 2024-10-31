@@ -98,6 +98,9 @@ RUN /usr/bin/sh /opt/stage-plugin-impact.sh
 COPY ./stage-plugin-ComfyUI-CogVideoX-MZ.sh /opt/
 RUN /usr/bin/sh /opt/stage-plugin-ComfyUI-CogVideoX-MZ.sh
 
+COPY ./stage-plugin-ComfyUi-MzMaXaM.sh /opt/
+RUN /usr/bin/sh /opt/stage-plugin-ComfyUi-MzMaXaM.sh
+
 COPY ./stage-fix-numpy.sh /opt/
 RUN /usr/bin/sh /opt/stage-fix-numpy.sh
 
