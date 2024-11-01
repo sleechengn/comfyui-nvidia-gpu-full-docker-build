@@ -1,5 +1,4 @@
 FROM ubuntu:jammy AS build-comfyui
-ENV PIP_INDEX_URL=https://pypi.org/simple
 ENV PIP_EXTRA_INDEX_URL=https://download.pytorch.org/whl/cu124
 
 COPY ./stage-comfyui.sh /opt/
@@ -10,7 +9,6 @@ CMD ["/usr/bin/bash"]
 
 
 FROM ubuntu:jammy AS build-libs
-ENV PIP_INDEX_URL=https://pypi.org/simple
 ENV PIP_EXTRA_INDEX_URL=https://download.pytorch.org/whl/cu124
 
 COPY --from=build-comfyui /opt/ComfyUI /opt/ComfyUI
@@ -120,7 +118,6 @@ CMD ["/usr/bin/bash"]
 
 
 FROM ubuntu:jammy AS prod
-ENV PIP_INDEX_URL=https://pypi.org/simple
 ENV PIP_EXTRA_INDEX_URL=https://download.pytorch.org/whl/cu124
 
 ADD ./settings.sh /opt/
