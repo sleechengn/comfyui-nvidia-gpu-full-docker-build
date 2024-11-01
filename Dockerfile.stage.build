@@ -101,6 +101,9 @@ RUN /usr/bin/sh /opt/stage-plugin-ComfyUI-CogVideoX-MZ.sh
 COPY ./stage-plugin-ComfyUI-MzMaXaM.sh /opt/
 RUN /usr/bin/sh /opt/stage-plugin-ComfyUI-MzMaXaM.sh
 
+COPY ./stage-plugin-ComfyUI_ADV_CLIP_emb.sh /opt/
+RUN /usr/bin/sh /opt/stage-plugin-ComfyUI_ADV_CLIP_emb.sh
+
 COPY ./stage-fix-numpy.sh /opt/
 RUN /usr/bin/sh /opt/stage-fix-numpy.sh
 
