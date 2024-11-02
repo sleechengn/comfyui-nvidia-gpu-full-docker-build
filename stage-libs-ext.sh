@@ -1,5 +1,7 @@
 #!/usr/bin/bash
 
+set -e
+
 chmod +x /opt/combine.sh
 
 find /opt/ComfyUI/custom_nodes|grep requirements.txt|grep -v /src/|grep -v /tests/|xargs -i /opt/combine.sh {} /opt/requirements.txt

@@ -1,5 +1,7 @@
 #!/usr/bin/bash
 
+set -e
+
 apt update
 apt -y remove python*
 apt -y autoremove

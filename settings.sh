@@ -1,9 +1,11 @@
 #!/usr/bin/bash
 
+set -e
+
 apt update
 apt remove python*
 apt autoremove
-apt -y install openssh-server nano unzip wget curl psmisc net-tools git python3.11 python3-pip nginx fonts-noto-cjk-extra ffmpeg ttyd python3.11-dev libglfw3-dev libgles2-mesa-dev freeglut3-dev
+apt -y install openssh-server curl git python3.11 python3-pip nginx fonts-noto-cjk-extra ffmpeg ttyd python3.11-dev libglfw3-dev libgles2-mesa-dev freeglut3-dev
 
 # configure ssh-server
 sed -i 's/.*PermitRootLogin.*/PermitRootLogin yes/g' /etc/ssh/sshd_config

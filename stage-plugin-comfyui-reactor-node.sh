@@ -1,4 +1,5 @@
 #/usr/bin/bash
+set -e
 cd /opt/ComfyUI/custom_nodes
 git clone https://github.com/Gourieff/comfyui-reactor-node
 python3.11 -m pip install -r /opt/ComfyUI/custom_nodes/comfyui-reactor-node/requirements.txt

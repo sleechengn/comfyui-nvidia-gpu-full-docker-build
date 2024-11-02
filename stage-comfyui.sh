@@ -1,4 +1,7 @@
 #!/usr/bin/bash
+
+set -e
+
 apt update
 apt -y install git curl
 
