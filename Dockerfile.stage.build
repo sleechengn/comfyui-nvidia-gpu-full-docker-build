@@ -107,6 +107,15 @@ RUN /usr/bin/sh /opt/stage-plugin-comfyui-ollama.sh
 COPY ./stage-plugin-ComfyUI_ADV_CLIP_emb.sh /opt/
 RUN /usr/bin/sh /opt/stage-plugin-ComfyUI_ADV_CLIP_emb.sh
 
+COPY ./stage-plugin-CogVideoX-Fun.sh /opt/
+RUN /usr/bin/sh /opt/stage-plugin-CogVideoX-Fun.sh
+
+COPY ./stage-plugin-OmniGen-ComfyUI.sh /opt/
+RUN /usr/bin/sh /opt/stage-plugin-OmniGen-ComfyUI.sh
+
+COPY ./stage-plugin-ComfyUI-TypeAux.sh /opt/
+RUN /usr/bin/sh /opt/stage-plugin-ComfyUI-TypeAux.sh
+
 COPY ./stage-fix-numpy.sh /opt/
 RUN /usr/bin/sh /opt/stage-fix-numpy.sh
 
