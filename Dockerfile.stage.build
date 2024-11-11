@@ -83,8 +83,8 @@ RUN /usr/bin/sh /opt/stage-plugin-cg-use-everywhere.sh
 COPY ./stage-plugin-ComfyUI_CatVTON_Wrapper.sh /opt/
 RUN /usr/bin/sh /opt/stage-plugin-ComfyUI_CatVTON_Wrapper.sh
 
-COPY ./stage-plugin-MotionDiff.sh /opt/
-RUN /usr/bin/sh /opt/stage-plugin-MotionDiff.sh
+COPY ./stage-plugin-ComfyUI-MotionDiff.sh /opt/
+RUN /usr/bin/sh /opt/stage-plugin-ComfyUI-MotionDiff.sh
 
 COPY ./stage-plugin-SD-Latent-Interposer.sh /opt/
 RUN /usr/bin/sh /opt/stage-plugin-SD-Latent-Interposer.sh
