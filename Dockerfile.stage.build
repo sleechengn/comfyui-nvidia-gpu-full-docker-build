@@ -92,8 +92,8 @@ RUN /usr/bin/sh /opt/stage-plugin-SD-Latent-Interposer.sh
 COPY ./stage-plugin-ComfyUI-FreeMemory.sh /opt/
 RUN /usr/bin/sh /opt/stage-plugin-ComfyUI-FreeMemory.sh
 
-COPY ./stage-plugin-impact.sh /opt/
-RUN /usr/bin/sh /opt/stage-plugin-impact.sh
+COPY ./stage-plugin-ComfyUI-Impact-Pack.sh /opt/
+RUN /usr/bin/sh /opt/stage-plugin-ComfyUI-Impact-Pack.sh
 
 COPY ./stage-plugin-ComfyUI-CogVideoX-MZ.sh /opt/
 RUN /usr/bin/sh /opt/stage-plugin-ComfyUI-CogVideoX-MZ.sh

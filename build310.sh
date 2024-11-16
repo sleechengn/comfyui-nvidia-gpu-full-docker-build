@@ -12,4 +12,4 @@ sed -i 's,python3\.11,python3.10,g' init.sh
 sed -i 's,python3\.11,python3.10,g' settings.sh
 find .|grep stage|grep -v grep|xargs -i sed -i 's,python3\.11,python3.10,g' {}
 
-./build.sh
+./build.sh sleechengn/comfyui:py310
