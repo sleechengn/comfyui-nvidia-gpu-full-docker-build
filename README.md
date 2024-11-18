@@ -167,18 +167,25 @@ Then use the following compose configuration
 
 ```
 networks:
-  lan:
+  lan13:
     external: true
-    name: "lan"
+    name: "lan13"
 volumes:
-  comyui-base:
+  comfyui-base:
     name: comyui-base
     driver: local
     driver_opts:
       o: bind
       type: none
       device: /opt/apps/comfyui
-  comyui-models:
+  comfyui-wd14-model:
+    name: comfyui-wd14-model
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /opt/apps/comfyui-wd14-model
+  comfyui-models:
     name: comyui-models
     driver: local
     driver_opts:
@@ -220,6 +227,20 @@ volumes:
       o: bind
       type: none
       device: /opt/apps/comfyui-mimic-motion-models
+  comfyui-site-packages:
+    name: comfyui-site-packages
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /opt/apps/comfyui-site-packages
+  comfyui-user:
+    name: comfyui-user
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /opt/apps/comfyui-user
 services:
   comfyui:
     container_name: "comfyui"
@@ -240,26 +261,37 @@ services:
       - NVIDIA_DRIVER_CAPABILITIES=all
       - NVIDIA_VISIBLE_DEVICES=all
       - HF_HOME=/opt/huggingface_hub
-      - HF_ENDPOINT=https://hf-mirror.com
+      # - HF_ENDPOINT=https://hf-mirror.com
     #command: ["--lowvram", "--preview-method", "auto", "--use-split-cross-attention"]
-    command: ["--lowvram", "--front-end-version", "latest", "--listen", "0.0.0.0", "--disable-smart-memory","--enable-cors-header" ,"'*'"]
+    command: ["--front-end-version", "latest", "--listen", "0.0.0.0", "--disable-smart-memory","--enable-cors-header" ,"'*'"]
+    #command: ["--listen", "0.0.0.0", "--disable-smart-memory", "--enable-cors-header" ,"'*'"]
     volumes:
-      - comyui-base:/opt/ComfyUI
-      - comyui-models:/opt/ComfyUI/models
+      - comfyui-base:/opt/ComfyUI
+      - comfyui-wd14-model:/opt/ComfyUI/custom_nodes/ComfyUI-WD14-Tagger/models
+      - comfyui-models:/opt/ComfyUI/models
       - comfyui-cn-processor:/opt/ComfyUI/custom_nodes/comfyui_controlnet_aux/ckpts
       - comfyui-output:/opt/ComfyUI/output
       - comfyui-input:/opt/ComfyUI/input
       - comfyui-huggingface_hub:/opt/huggingface_hub
       - comfyui-mimic-motion-models:/opt/ComfyUI/custom_nodes/ComfyUI-MimicMotion/models
+      - comfyui-site-packages:/usr/local/lib/python3.10/dist-packages
+      - comfyui-user:/opt/ComfyUI/user
 #    memswap_limit: 16G
     runtime: nvidia
+    # deploy:
+    #   resources:
+    #     limits:
+    #       memory: 16G
+    #     reservations:
+    #       devices:
+    #         - capabilities: [ gpu ]
     deploy:
       resources:
-#        limits:
-#          memory: 16G
         reservations:
           devices:
-            - capabilities: [ gpu ]
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
 ```
 
 comfyui的地址(80端口)是：
