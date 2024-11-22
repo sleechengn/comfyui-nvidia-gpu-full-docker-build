@@ -29,8 +29,8 @@ RUN /usr/bin/bash /opt/stage-plugin-x-flux-comfyui.sh
 COPY ./stage-plugin-segment-anything2.sh /opt/
 RUN /usr/bin/bash /opt/stage-plugin-segment-anything2.sh
 
-COPY ./stage-plugin-ComfyUI-MimicMotion.sh /opt/
-RUN /usr/bin/bash /opt/stage-plugin-ComfyUI-MimicMotion.sh
+#COPY ./stage-plugin-ComfyUI-MimicMotion.sh /opt/
+#RUN /usr/bin/bash /opt/stage-plugin-ComfyUI-MimicMotion.sh
 
 COPY ./stage-plugin-ComfyUI-CogVideoXWrapper.sh /opt/
 RUN /usr/bin/bash /opt/stage-plugin-ComfyUI-CogVideoXWrapper.sh
@@ -122,11 +122,10 @@ RUN /usr/bin/sh /opt/stage-fix-numpy.sh
 COPY ./stage-fix-torchaudio.sh /opt/
 RUN /usr/bin/sh /opt/stage-fix-torchaudio.sh
 
-COPY ./stage-cuda-prepare-install.sh /opt/
-RUN /usr/bin/sh /opt/stage-cuda-prepare-install.sh
-
-COPY ./stage-fix-SageAttention.sh /opt/
-RUN /usr/bin/sh /opt/stage-fix-SageAttention.sh
+#COPY ./stage-cuda-prepare-install.sh /opt/
+#RUN /usr/bin/sh /opt/stage-cuda-prepare-install.sh
+#COPY ./stage-fix-SageAttention.sh /opt/
+#RUN /usr/bin/sh /opt/stage-fix-SageAttention.sh
 
 CMD ["/usr/bin/bash"]
 

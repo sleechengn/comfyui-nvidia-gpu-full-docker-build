@@ -2,6 +2,7 @@
 set -e
 
 rm -rf /opt/tmp/comfyui-build-310
+mkdir -p /opt/tmp
 /usr/bin/cp -ra . /opt/tmp/comfyui-build-310
 
 cd /opt/tmp/comfyui-build-310
