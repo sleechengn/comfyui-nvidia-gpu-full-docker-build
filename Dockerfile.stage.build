@@ -122,6 +122,9 @@ RUN /usr/bin/sh /opt/stage-fix-numpy.sh
 COPY ./stage-fix-torchaudio.sh /opt/
 RUN /usr/bin/sh /opt/stage-fix-torchaudio.sh
 
+COPY ./stage-cuda-prepare-install.sh /opt/
+RUN /usr/bin/sh /opt/stage-cuda-prepare-install.sh
+
 COPY ./stage-fix-SageAttention.sh /opt/
 RUN /usr/bin/sh /opt/stage-fix-SageAttention.sh
 
@@ -134,9 +137,15 @@ ENV PIP_EXTRA_INDEX_URL=https://download.pytorch.org/whl/cu124
 
 ADD ./settings.sh /opt/
 RUN chmod +x /opt/settings.sh && /opt/settings.sh && rm -rf /opt/settings.sh
+
+ADD ./settings-cuda.sh /opt/
+RUN chmod +x /opt/settings-cuda.sh && /opt/settings-cuda.sh && rm -rf /opt/settings-cuda.sh
+ENV CUDA_HOME=/usr/local/cuda-12.6
+
 COPY --from=build-libs /usr/local/lib/python3.11/dist-packages /usr/local/lib/python3.11/dist-packages
 COPY --from=build-libs /opt/ComfyUI /opt/ComfyUI
 ADD ./ComfyUI /etc/nginx/sites-enabled/
+
 # setup and initialize
 COPY ./init.sh /
 RUN chmod +x /init.sh
@@ -157,3 +166,4 @@ VOLUME /opt/ComfyUI/custom_nodes/ComfyUI-MimicMotion/models
 VOLUME /usr/local/lib/python3.11/dist-packages
 VOLUME /opt/ComfyUI/custom_nodes/ComfyUI-WD14-Tagger/models
 VOLUME /opt/ComfyUI/user
+VOLUME /opt/ComfyUI/custom_nodes/ComfyUI-Frame-Interpolation/ckpts
