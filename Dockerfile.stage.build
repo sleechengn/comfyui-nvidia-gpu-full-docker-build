@@ -116,6 +116,15 @@ RUN /usr/bin/sh /opt/stage-plugin-OmniGen-ComfyUI.sh
 COPY ./stage-plugin-ComfyUI-TypeAux.sh /opt/
 RUN /usr/bin/sh /opt/stage-plugin-ComfyUI-TypeAux.sh
 
+COPY ./stage-plugin-ComfyUI_AdvancedRefluxControl.sh /opt/
+RUN /usr/bin/sh /opt/stage-plugin-ComfyUI_AdvancedRefluxControl.sh
+
+COPY ./stage-plugin-ComfyUI_EchoMimic.sh /opt/
+RUN /usr/bin/sh /opt/stage-plugin-ComfyUI_EchoMimic.sh
+
+#COPY ./stage-plugin-ComfyUI-LTXVideo.sh /opt/
+#RUN /usr/bin/sh /opt/stage-plugin-ComfyUI-LTXVideo.sh
+
 COPY ./stage-fix-numpy.sh /opt/
 RUN /usr/bin/sh /opt/stage-fix-numpy.sh
 
