@@ -122,6 +122,9 @@ RUN /usr/bin/sh /opt/stage-plugin-ComfyUI_AdvancedRefluxControl.sh
 COPY ./stage-plugin-ComfyUI_EchoMimic.sh /opt/
 RUN /usr/bin/sh /opt/stage-plugin-ComfyUI_EchoMimic.sh
 
+COPY ./stage-plugin-comfyui-dynamicprompts.sh /opt/
+RUN /usr/bin/sh /opt/stage-plugin-comfyui-dynamicprompts.sh
+
 #COPY ./stage-plugin-ComfyUI-LTXVideo.sh /opt/
 #RUN /usr/bin/sh /opt/stage-plugin-ComfyUI-LTXVideo.sh
 
