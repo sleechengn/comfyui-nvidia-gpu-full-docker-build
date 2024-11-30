@@ -125,6 +125,8 @@ RUN /usr/bin/sh /opt/stage-plugin-ComfyUI_EchoMimic.sh
 COPY ./stage-plugin-comfyui-dynamicprompts.sh /opt/
 RUN /usr/bin/sh /opt/stage-plugin-comfyui-dynamicprompts.sh
 
+COPY ./stage-plugin-Comfyui-FlowChain.sh /opt/
+RUN /usr/bin/sh /opt/stage-plugin-Comfyui-FlowChain.sh
 #COPY ./stage-plugin-ComfyUI-LTXVideo.sh /opt/
 #RUN /usr/bin/sh /opt/stage-plugin-ComfyUI-LTXVideo.sh
 
