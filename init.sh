@@ -9,7 +9,7 @@ do
     if test -f $file
     then
         /usr/bin/bash $file
-	rm -rm $file
+	rm -rf $file
     fi
 done
 
