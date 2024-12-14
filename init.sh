@@ -4,6 +4,15 @@ if [ -e "/install.sh" ] ; then
 	rm -rf /install.sh
 fi
 
+for file in /opt/installer/*
+do
+    if test -f $file
+    then
+        /usr/bin/bash $file
+	rm -rm $file
+    fi
+done
+
 /usr/sbin/sshd
 /usr/sbin/nginx
 

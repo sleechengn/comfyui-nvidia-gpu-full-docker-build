@@ -130,6 +130,9 @@ RUN /usr/bin/sh /opt/stage-plugin-Comfyui-FlowChain.sh
 #COPY ./stage-plugin-ComfyUI-LTXVideo.sh /opt/
 #RUN /usr/bin/sh /opt/stage-plugin-ComfyUI-LTXVideo.sh
 
+COPY ./stage-plugin-ComfyUI-HunyuanVideoWrapper.sh /opt/
+RUN /usr/bin/sh /opt/stage-plugin-ComfyUI-HunyuanVideoWrapper.sh
+
 COPY ./stage-fix-numpy.sh /opt/
 RUN /usr/bin/sh /opt/stage-fix-numpy.sh
 
@@ -153,10 +156,15 @@ RUN chmod +x /opt/settings.sh && /opt/settings.sh && rm -rf /opt/settings.sh
 
 ADD ./settings-cuda.sh /opt/
 RUN chmod +x /opt/settings-cuda.sh && /opt/settings-cuda.sh && rm -rf /opt/settings-cuda.sh
+
 ENV CUDA_HOME=/usr/local/cuda-12.6
 
 COPY --from=build-libs /usr/local/lib/python3.11/dist-packages /usr/local/lib/python3.11/dist-packages
 COPY --from=build-libs /opt/ComfyUI /opt/ComfyUI
+
+RUN mkdir -p /opt/installer
+ADD ./settings-sageattention.sh /opt/installer/
+
 ADD ./ComfyUI /etc/nginx/sites-enabled/
 
 # setup and initialize
