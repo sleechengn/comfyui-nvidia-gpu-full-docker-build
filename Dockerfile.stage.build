@@ -184,6 +184,7 @@ VOLUME /opt/ComfyUI
 VOLUME /opt/ComfyUI/models
 VOLUME /opt/ComfyUI/custom_nodes/comfyui_controlnet_aux/ckpts
 #VOLUME /opt/ComfyUI/custom_nodes/ComfyUI-MimicMotion/models
+VOLUME /opt/installer
 VOLUME /usr/local/lib/python3.11/dist-packages
 VOLUME /opt/ComfyUI/custom_nodes/ComfyUI-WD14-Tagger/models
 VOLUME /opt/ComfyUI/user

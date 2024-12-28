@@ -4,7 +4,7 @@ if [ -e "/install.sh" ] ; then
 	rm -rf /install.sh
 fi
 
-for file in /opt/installer/*
+for file in /opt/installer/*.sh
 do
     if test -f $file
     then
