@@ -162,7 +162,7 @@ ENV CUDA_HOME=/usr/local/cuda-12.6
 COPY --from=build-libs /usr/local/lib/python3.11/dist-packages /usr/local/lib/python3.11/dist-packages
 COPY --from=build-libs /opt/ComfyUI /opt/ComfyUI
 
-RUN mkdir -p /opt/installer
+RUN mkdir -p /opt/installer && touch /opt/installer/keep
 ADD ./settings-sageattention.sh /opt/installer/
 
 ADD ./ComfyUI /etc/nginx/sites-enabled/
