@@ -62,8 +62,8 @@ RUN /usr/bin/sh /opt/stage-plugin-ComfyUI-Frame-Interpolation.sh
 COPY ./stage-plugin-ComfyUI-Prompt-Translator.sh /opt/
 RUN /usr/bin/sh /opt/stage-plugin-ComfyUI-Prompt-Translator.sh
 
-COPY ./stage-plugin-comfyui-reactor-node.sh /opt/
-RUN /usr/bin/sh /opt/stage-plugin-comfyui-reactor-node.sh
+COPY ./stage-plugin-ComfyUI-Reactor.sh /opt/
+RUN /usr/bin/sh /opt/stage-plugin-ComfyUI-Reactor.sh
 
 COPY ./stage-plugin-ComfyUI_kkTranslator_nodes.sh /opt/
 RUN /usr/bin/sh /opt/stage-plugin-ComfyUI_kkTranslator_nodes.sh
