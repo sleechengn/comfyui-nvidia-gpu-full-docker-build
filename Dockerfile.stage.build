@@ -133,6 +133,9 @@ RUN /usr/bin/sh /opt/stage-plugin-Comfyui-FlowChain.sh
 COPY ./stage-plugin-ComfyUI-HunyuanVideoWrapper.sh /opt/
 RUN /usr/bin/sh /opt/stage-plugin-ComfyUI-HunyuanVideoWrapper.sh
 
+COPY ./stage-plugin-ComfyUI-LatentSyncWrapper.sh /opt/
+RUN /usr/bin/sh /opt/stage-plugin-ComfyUI-LatentSyncWrapper.sh
+
 COPY ./stage-fix-numpy.sh /opt/
 RUN /usr/bin/sh /opt/stage-fix-numpy.sh
 
@@ -189,3 +192,4 @@ VOLUME /usr/local/lib/python3.11/dist-packages
 VOLUME /opt/ComfyUI/custom_nodes/ComfyUI-WD14-Tagger/models
 VOLUME /opt/ComfyUI/user
 VOLUME /opt/ComfyUI/custom_nodes/ComfyUI-Frame-Interpolation/ckpts
+VOLUME /opt/ComfyUI/custom_nodes/ComfyUI-LatentSyncWrapper/checkpoints
