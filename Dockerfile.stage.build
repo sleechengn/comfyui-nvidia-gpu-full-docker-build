@@ -139,6 +139,9 @@ RUN /usr/bin/sh /opt/stage-plugin-ComfyUI-LatentSyncWrapper.sh
 COPY ./stage-plugin-ComfyUI-Janus.sh /opt/
 RUN sh /opt/stage-plugin-ComfyUI-Janus.sh
 
+COPY ./stage-plugin-ComfyUI-FitDit.sh /opt/
+RUN sh /opt/stage-plugin-ComfyUI-FitDit.sh
+
 COPY ./stage-fix-numpy.sh /opt/
 RUN /usr/bin/sh /opt/stage-fix-numpy.sh
 
