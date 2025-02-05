@@ -1,8 +1,4 @@
 #!/usr/bin/bash
-if [ -e "/install.sh" ] ; then 
-	/install.sh
-	rm -rf /install.sh
-fi
 
 for file in /opt/installer/*.sh
 do

@@ -107,8 +107,8 @@ RUN /usr/bin/sh /opt/stage-plugin-comfyui-ollama.sh
 COPY ./stage-plugin-ComfyUI_ADV_CLIP_emb.sh /opt/
 RUN /usr/bin/sh /opt/stage-plugin-ComfyUI_ADV_CLIP_emb.sh
 
-COPY ./stage-plugin-CogVideoX-Fun.sh /opt/
-RUN /usr/bin/sh /opt/stage-plugin-CogVideoX-Fun.sh
+#COPY ./stage-plugin-CogVideoX-Fun.sh /opt/
+#RUN /usr/bin/sh /opt/stage-plugin-CogVideoX-Fun.sh
 
 COPY ./stage-plugin-OmniGen-ComfyUI.sh /opt/
 RUN /usr/bin/sh /opt/stage-plugin-OmniGen-ComfyUI.sh
@@ -181,16 +181,13 @@ ENV CUDA_HOME=/usr/local/cuda-12.6
 COPY --from=build-libs /usr/local/lib/python3.11/dist-packages /usr/local/lib/python3.11/dist-packages
 COPY --from=build-libs /opt/ComfyUI /opt/ComfyUI
 
-RUN mkdir -p /opt/installer && touch /opt/installer/keep
-ADD ./settings-sageattention.sh /opt/installer/
+COPY ./installer /opt/installer
 
 ADD ./ComfyUI /etc/nginx/sites-enabled/
 
 # setup and initialize
 COPY ./init.sh /
 RUN chmod +x /init.sh
-COPY ./install.sh /
-RUN chmod +x /install.sh
 
 ENTRYPOINT ["/init.sh"]
 CMD []
