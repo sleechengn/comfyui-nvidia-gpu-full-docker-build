@@ -143,6 +143,15 @@ RUN sh /opt/stage-plugin-ComfyUI-FitDit.sh
 COPY ./stage-plugin-ComfyUI-LTXVideo.sh /opt/
 RUN /usr/bin/sh /opt/stage-plugin-ComfyUI-LTXVideo.sh
 
+COPY ./stage-plugin-Ruyi-Models.sh /opt/
+RUN sh /opt/stage-plugin-Ruyi-Models.sh
+
+COPY ./stage-plugin-Comfy-WaveSpeed.sh /opt/
+RUN sh /opt/stage-plugin-Comfy-WaveSpeed.sh
+
+COPY ./stage-plugin-ComfyUI-TeaCache.sh /opt/
+RUN sh /opt/stage-plugin-ComfyUI-TeaCache.sh
+
 COPY ./stage-fix-numpy.sh /opt/
 RUN /usr/bin/sh /opt/stage-fix-numpy.sh
 
