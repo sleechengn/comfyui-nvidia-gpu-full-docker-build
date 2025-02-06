@@ -152,6 +152,9 @@ RUN sh /opt/stage-plugin-Comfy-WaveSpeed.sh
 COPY ./stage-plugin-ComfyUI-TeaCache.sh /opt/
 RUN sh /opt/stage-plugin-ComfyUI-TeaCache.sh
 
+COPY ./stage-plugin-Comfyui_TTP_Toolset.sh /opt/
+RUN sh /opt/stage-plugin-Comfyui_TTP_Toolset.sh
+
 COPY ./stage-fix-numpy.sh /opt/
 RUN /usr/bin/sh /opt/stage-fix-numpy.sh
 
