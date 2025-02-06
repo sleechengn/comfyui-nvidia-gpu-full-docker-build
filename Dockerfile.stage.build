@@ -155,8 +155,8 @@ RUN sh /opt/stage-plugin-ComfyUI-TeaCache.sh
 COPY ./stage-plugin-Comfyui_TTP_Toolset.sh /opt/
 RUN sh /opt/stage-plugin-Comfyui_TTP_Toolset.sh
 
-COPY ./stage-plugin-BrevImage.sh /opt/
-RUN sh /opt/stage-plugin-BrevImage.sh
+#COPY ./stage-plugin-BrevImage.sh /opt/
+#RUN sh /opt/stage-plugin-BrevImage.sh
 
 COPY ./stage-fix-numpy.sh /opt/
 RUN /usr/bin/sh /opt/stage-fix-numpy.sh
