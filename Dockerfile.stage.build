@@ -158,8 +158,11 @@ RUN sh /opt/stage-plugin-ComfyUI-TeaCache.sh
 COPY ./stage-plugin-Comfyui_TTP_Toolset.sh /opt/
 RUN sh /opt/stage-plugin-Comfyui_TTP_Toolset.sh
 
-#COPY ./stage-plugin-BrevImage.sh /opt/
-#RUN sh /opt/stage-plugin-BrevImage.sh
+
+RUN set -e \
+	&& cd /opt/ComfyUI/custom_nodes \
+	&& git clone https://github.com/Tenney95/ComfyUI-NodeAligner \
+	&& cd /opt/ComfyUI/custom_nodes/ComfyUI-NodeAligner
 
 COPY ./stage-fix-numpy.sh /opt/
 RUN /usr/bin/sh /opt/stage-fix-numpy.sh
