@@ -373,10 +373,9 @@ COPY ./installer /opt/installer
 ADD ./ComfyUI /etc/nginx/sites-enabled/
 
 # setup and initialize
-COPY ./init.sh /
-RUN chmod +x /init.sh
-
-ENTRYPOINT ["/init.sh"]
+COPY ./docker-entrypoint.sh /
+RUN chmod +x /docker-entrypoint.sh
+ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD []
 
 WORKDIR /opt/ComfyUI
