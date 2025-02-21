@@ -345,7 +345,7 @@ RUN set -e \
         && apt update \
         && apt remove python* \
         && apt autoremove \
-        && apt -y install wget openssh-server curl git python3.11 python3-pip nginx fonts-noto-cjk-extra ffmpeg ttyd python3.11-dev libglfw3-dev libgles2 \
+        && apt -y install wget openssh-server curl git python3.11 python3-pip nginx fonts-noto-cjk-extra ffmpeg ttyd python3.11-dev libglfw3-dev libgles2 gcc make g++ aria2\
         && sed -i 's/.*PermitRootLogin.*/PermitRootLogin yes/g' /etc/ssh/sshd_config \
         && mkdir /run/sshd \
         && chmod -R 700 /run/sshd \
@@ -359,7 +359,7 @@ RUN set -e \
         && apt autoremove
 
 RUN set -e \
-        && wget https://developer.download.nvidia.com/compute/cuda/12.6.3/local_installers/cuda_12.6.3_560.35.05_linux.run \
+        && aria2c --max-connection-per-server=10 --min-split-size=1M --max-concurrent-downloads=8 https://developer.download.nvidia.com/compute/cuda/12.6.3/local_installers/cuda_12.6.3_560.35.05_linux.run \
         && chmod +x cuda_12.6.3_560.35.05_linux.run \
         && ./cuda_12.6.3_560.35.05_linux.run --silent --toolkit \
         && rm -rf cuda_12.6.3_560.35.05_linux.run
