@@ -20,6 +20,8 @@ docker build . --file Dockerfile.stage.build --target prod -t 192.168.13.73:5000
 
 docker-compose.yml 案例
 
+注意：第一次启动时，请确保网络畅通，将安装nvcc依赖编译器的插件
+
 ```yaml
 networks:
   comfyui-network:
