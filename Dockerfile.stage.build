@@ -1,351 +1,500 @@
-FROM ubuntu:jammy AS build-comfyui
-ENV PIP_EXTRA_INDEX_URL=https://download.pytorch.org/whl/cu124
+from ubuntu:jammy as build-comfyui
+env PIP_EXTRA_INDEX_URL=https://download.pytorch.org/whl/cu124
 
 
-RUN set -e \
+run set -e \
         && apt update \
         && apt -y install git curl
 
-RUN set -e \
+run set -e \
 	&& cd /opt \
         && git clone https://github.com/comfyanonymous/ComfyUI
 
-RUN set -e \
+run set -e \
 	&& cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/ltdrdata/ComfyUI-Manager
-RUN set -e \
+run set -e \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/Fannovel16/comfyui_controlnet_aux
-RUN set -e \
+run set -e \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/AlekPet/ComfyUI_Custom_Nodes_AlekPet
-RUN set -e \
+run set -e \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/FizzleDorf/ComfyUI_FizzNodes
-RUN set -e \
+run set -e \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/Kosinkadink/ComfyUI-AnimateDiff-Evolved
-RUN set -e \
+run set -e \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite
-RUN set -e \
+run set -e \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/ZHO-ZHO-ZHO/ComfyUI-BRIA_AI-RMBG
-RUN set -e \
+run set -e \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/cubiq/ComfyUI_InstantID
-RUN set -e \
+run set -e \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/pythongosssss/ComfyUI-Custom-Scripts
-RUN set -e \
+run set -e \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/cubiq/ComfyUI_IPAdapter_plus
-RUN set -e \
+run set -e \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/AIGODLIKE/AIGODLIKE-COMFYUI-TRANSLATION
-RUN set -e \
+run set -e \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/crystian/ComfyUI-Crystools
-RUN set -e \
+run set -e \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/storyicon/comfyui_segment_anything
-RUN set -e \
+run set -e \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/Kosinkadink/ComfyUI-Advanced-ControlNet
-RUN set -e \
+run set -e \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/rgthree/rgthree-comfy
-RUN set -e \
+run set -e \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/yolain/ComfyUI-Easy-Use
-RUN set -e \
+run set -e \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/huchenlei/ComfyUI-layerdiffuse
-RUN set -e \
+run set -e \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/kijai/ComfyUI-SUPIR
-RUN set -e \
+run set -e \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/ltdrdata/ComfyUI-Inspire-Pack
-RUN set -e \
+run set -e \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/city96/ComfyUI-GGUF
 
-CMD ["/usr/bin/bash"]
+
+from build-comfyui as build-libs
 
 
+run set -e \
+	&& apt install -y wget
+
+run set -e \
+	&& cd /root \
+        && apt install -y wget \
+        && wget https://astral.sh/uv/install.sh \
+        && bash install.sh \
+	&& rm -rf install.sh
+
+run . /root/.local/bin/env \ 
+        && uv venv /opt/venv --python 3.11 --seed \
+        && . /opt/venv/bin/activate
 
 
-FROM ubuntu:jammy AS build-libs
-ENV PIP_EXTRA_INDEX_URL=https://download.pytorch.org/whl/cu124
-
-COPY --from=build-comfyui /opt/ComfyUI /opt/ComfyUI
-
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+	&& . /opt/venv/bin/activate \
         && apt update \
         && apt -y remove python* \
         && apt -y autoremove
-RUN echo "#!/usr/bin/bash" >> /opt/combine.sh \
+
+run echo "#!/usr/bin/bash" >> /opt/combine.sh \
         && echo "cat \$1 >> \$2" >> /opt/combine.sh \
         && echo "echo -e '\\\n' >> \$2" >> /opt/combine.sh
-RUN apt install -y git python3.11 python3-pip python3.11-dev ffmpeg
 
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+	&& . /opt/venv/bin/activate \
         && cd /opt \
-        && python3.11 -m pip install -r /opt/ComfyUI/requirements.txt
+        && uv pip install -r /opt/ComfyUI/requirements.txt
 
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+	&& . /opt/venv/bin/activate \
         && chmod +x /opt/combine.sh \
+	&& apt install -y gcc make g++ \
         && find /opt/ComfyUI/custom_nodes|grep requirements.txt|grep -v /src/|grep -v /tests/|xargs -i /opt/combine.sh {} /opt/requirements.txt \
-        && python3.11 -m pip install async_timeout ultralytics!=8.2.5 diffusers -r /opt/requirements.txt \
-        && python3.11 -m pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-GGUF/requirements.txt --force --upgrade
+        && uv pip install async_timeout ultralytics!=8.2.5 diffusers -r /opt/requirements.txt \
+        && uv pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-GGUF/requirements.txt --upgrade
 
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/XLabs-AI/x-flux-comfyui \
-        && python3.11 -m pip install -r /opt/ComfyUI/custom_nodes/x-flux-comfyui/requirements.txt \
+        && uv pip install -r /opt/ComfyUI/custom_nodes/x-flux-comfyui/requirements.txt \
         && cd /opt/ComfyUI/custom_nodes/x-flux-comfyui
 
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/kijai/ComfyUI-segment-anything-2 \
-        && python3.11 -m pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-segment-anything-2/requirements.txt \
+        && uv pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-segment-anything-2/requirements.txt \
         && cd /opt/ComfyUI/custom_nodes/ComfyUI-segment-anything-2
 
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/kijai/ComfyUI-CogVideoXWrapper \
-        && python3.11 -m pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-CogVideoXWrapper/requirements.txt \
+        && uv pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-CogVideoXWrapper/requirements.txt \
         && cd /opt/ComfyUI/custom_nodes/ComfyUI-CogVideoXWrapper
 
-RUN set -e \
-        && python3.11 -m pip install xformers --force --upgrade
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
+        && uv pip install xformers --upgrade
 
 
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/kijai/ComfyUI-KJNodes \
-        && python3.11 -m pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-KJNodes/requirements.txt \
+        && uv pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-KJNodes/requirements.txt \
         && cd /opt/ComfyUI/custom_nodes/ComfyUI-KJNodes
 
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/cubiq/ComfyUI_essentials \
-        && python3.11 -m pip install -r /opt/ComfyUI/custom_nodes/ComfyUI_essentials/requirements.txt \
+        && uv pip install -r /opt/ComfyUI/custom_nodes/ComfyUI_essentials/requirements.txt \
         && cd /opt/ComfyUI/custom_nodes/ComfyUI_essentials
 
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/kadirnar/ComfyUI-YOLO \
-        && python3.11 -m pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-YOLO/requirements.txt \
+        && uv pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-YOLO/requirements.txt \
         && cd /opt/ComfyUI/custom_nodes/ComfyUI-YOLO
 
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/Stability-AI/stability-ComfyUI-nodes \
-        && python3.11 -m pip install -r /opt/ComfyUI/custom_nodes/stability-ComfyUI-nodes/requirements.txt \
+        && uv pip install -r /opt/ComfyUI/custom_nodes/stability-ComfyUI-nodes/requirements.txt \
         && cd /opt/ComfyUI/custom_nodes/stability-ComfyUI-nodes
 
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/jamesWalker55/comfyui-various
 
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/SeaArtLab/ComfyUI-Long-CLIP \
         && cd /opt/ComfyUI/custom_nodes/ComfyUI-Long-CLIP
 
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/Fannovel16/ComfyUI-Frame-Interpolation \
-        && python3.11 -m pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-Frame-Interpolation/requirements-no-cupy.txt \
+        && uv pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-Frame-Interpolation/requirements-no-cupy.txt \
         && cd /opt/ComfyUI/custom_nodes/ComfyUI-Frame-Interpolation \
-        && python3.11 install.py
-RUN set -e \
+        && python install.py
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/MofaAI/ComfyUI-Prompt-Translator \
         && cd /opt/ComfyUI/custom_nodes/ComfyUI-Prompt-Translator
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/Gourieff/ComfyUI-ReActor \
-        && python3.11 -m pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-ReActor/requirements.txt \
+        && uv pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-ReActor/requirements.txt \
         && cd /opt/ComfyUI/custom_nodes/ComfyUI-ReActor \
-        && python3.11 install.py
-RUN set -e \
+        && python install.py
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/AIGCTeam/ComfyUI_kkTranslator_nodes \
         && sed -i '/hashlib/d' /opt/ComfyUI/custom_nodes/ComfyUI_kkTranslator_nodes/requirements.txt \
         && sed -i '/random/d' /opt/ComfyUI/custom_nodes/ComfyUI_kkTranslator_nodes/requirements.txt \
         && sed -i '/json/d' /opt/ComfyUI/custom_nodes/ComfyUI_kkTranslator_nodes/requirements.txt \
-        && python3.11 -m pip install -r /opt/ComfyUI/custom_nodes/ComfyUI_kkTranslator_nodes/requirements.txt \
+        && uv pip install -r /opt/ComfyUI/custom_nodes/ComfyUI_kkTranslator_nodes/requirements.txt \
         && cd /opt/ComfyUI/custom_nodes/ComfyUI_kkTranslator_nodes
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/kijai/ComfyUI-PyramidFlowWrapper \
-        && python3.11 -m pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-PyramidFlowWrapper/requirements.txt \
+        && uv pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-PyramidFlowWrapper/requirements.txt \
         && cd /opt/ComfyUI/custom_nodes/ComfyUI-PyramidFlowWrapper
 
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/pythongosssss/ComfyUI-WD14-Tagger \
-        && python3.11 -m pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-WD14-Tagger/requirements.txt \
+        && uv pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-WD14-Tagger/requirements.txt \
         && cd /opt/ComfyUI/custom_nodes/ComfyUI-WD14-Tagger
 
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/Acly/comfyui-inpaint-nodes \
         && cd /opt/ComfyUI/custom_nodes/comfyui-inpaint-nodes
 
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/chrisgoringe/cg-use-everywhere \
         && cd /opt/ComfyUI/custom_nodes/cg-use-everywhere
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/chflame163/ComfyUI_CatVTON_Wrapper \
-        && python3.11 -m pip install -r /opt/ComfyUI/custom_nodes/ComfyUI_CatVTON_Wrapper/requirements.txt \
+        && uv pip install -r /opt/ComfyUI/custom_nodes/ComfyUI_CatVTON_Wrapper/requirements.txt \
         && cd /opt/ComfyUI/custom_nodes/ComfyUI_CatVTON_Wrapper
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/Fannovel16/ComfyUI-MotionDiff \
         && apt install libglfw3-dev libgles2-mesa-dev freeglut3-dev -y \
-        && python3.11 -m pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-MotionDiff/requirements.txt \
+        && uv pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-MotionDiff/requirements.txt \
         && cd /opt/ComfyUI/custom_nodes/ComfyUI-MotionDiff \
-        && python3.11 install.py
-RUN set -e \
+        && python install.py
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/city96/SD-Latent-Interposer \
         && cd /opt/ComfyUI/custom_nodes/SD-Latent-Interposer
 
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/ShmuelRonen/ComfyUI-FreeMemory \
         && cd /opt/ComfyUI/custom_nodes/ComfyUI-FreeMemory
 
 
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/ltdrdata/ComfyUI-Impact-Pack \
-        && python3.11 -m pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-Impact-Pack/requirements.txt \
+        && uv pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-Impact-Pack/requirements.txt \
         && cd /opt/ComfyUI/custom_nodes/ComfyUI-Impact-Pack \
-        && python3.11 install.py
+        && python install.py
 
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/MinusZoneAI/ComfyUI-CogVideoX-MZ \
         && cd /opt/ComfyUI/custom_nodes/ComfyUI-CogVideoX-MZ
 
-RUN set -e \
-        && cd /opt/ComfyUI/custom_nodes \
-        && git clone https://github.com/MzMaXaM/ComfyUi-MzMaXaM \
-        && cd /opt/ComfyUI/custom_nodes/ComfyUi-MzMaXaM
+#run set -e \
+#	&& . /root/.local/bin/env \
+#        && . /opt/venv/bin/activate \
+#        && cd /opt/ComfyUI/custom_nodes \
+#        && git clone https://github.com/MzMaXaM/ComfyUi-MzMaXaM \
+#        && cd /opt/ComfyUI/custom_nodes/ComfyUi-MzMaXaM
 
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/stavsap/comfyui-ollama \
-        && python3.11 -m pip install -r /opt/ComfyUI/custom_nodes/comfyui-ollama/requirements.txt \
+        && uv pip install -r /opt/ComfyUI/custom_nodes/comfyui-ollama/requirements.txt \
         && cd /opt/ComfyUI/custom_nodes/comfyui-ollama
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/BlenderNeko/ComfyUI_ADV_CLIP_emb \
         && cd /opt/ComfyUI/custom_nodes/ComfyUI_ADV_CLIP_emb
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/sleechengn/ComfyUI-TypeAux \
         && cd /opt/ComfyUI/custom_nodes/ComfyUI-TypeAux
 
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/kaibioinfo/ComfyUI_AdvancedRefluxControl \
         && cd /opt/ComfyUI/custom_nodes/ComfyUI_AdvancedRefluxControl
 
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/smthemex/ComfyUI_EchoMimic \
-        && python3.11 -m pip install -r /opt/ComfyUI/custom_nodes/ComfyUI_EchoMimic/requirements.txt \
+	&& uv pip install --no-deps facenet-pytorch \
+        && uv pip install -r /opt/ComfyUI/custom_nodes/ComfyUI_EchoMimic/requirements.txt \
         && cd /opt/ComfyUI/custom_nodes/ComfyUI_EchoMimic
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/adieyal/comfyui-dynamicprompts \
-        && python3.11 -m pip install -r /opt/ComfyUI/custom_nodes/comfyui-dynamicprompts/requirements.txt \
+        && uv pip install -r /opt/ComfyUI/custom_nodes/comfyui-dynamicprompts/requirements.txt \
         && cd /opt/ComfyUI/custom_nodes/comfyui-dynamicprompts
 
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/numz/Comfyui-FlowChain \
-        && python3.11 -m pip install -r /opt/ComfyUI/custom_nodes/Comfyui-FlowChain/requirements.txt \
-        && python3.11 -m pip install websocket websockets \
+        && uv pip install -r /opt/ComfyUI/custom_nodes/Comfyui-FlowChain/requirements.txt \
+        && uv pip install websocket websockets \
         && cd /opt/ComfyUI/custom_nodes/Comfyui-FlowChain
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/kijai/ComfyUI-HunyuanVideoWrapper \
-        && python3.11 -m pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-HunyuanVideoWrapper/requirements.txt \
+        && uv pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-HunyuanVideoWrapper/requirements.txt \
         && cd /opt/ComfyUI/custom_nodes/ComfyUI-HunyuanVideoWrapper
 
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/ShmuelRonen/ComfyUI-LatentSyncWrapper \
-        && python3.11 -m pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-LatentSyncWrapper/requirements.txt \
+        && uv pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-LatentSyncWrapper/requirements.txt \
         && cd /opt/ComfyUI/custom_nodes/ComfyUI-LatentSyncWrapper
 
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
-        && python3.11 -m pip install pip --upgrade \
+        && uv pip install pip --upgrade \
         && git clone https://github.com/CY-CHENYUE/ComfyUI-Janus-Pro \
-        && python3.11 -m pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-Janus-Pro/requirements.txt \
+        && uv pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-Janus-Pro/requirements.txt \
         && cd /opt/ComfyUI/custom_nodes/ComfyUI-Janus-Pro
 
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/lgldlk/ComfyUI-FitDit
 
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/Lightricks/ComfyUI-LTXVideo \
-        && python3.11 -m pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-LTXVideo/requirements.txt \
+        && uv pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-LTXVideo/requirements.txt \
         && cd /opt/ComfyUI/custom_nodes/ComfyUI-LTXVideo
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/IamCreateAI/Ruyi-Models.git \
-        && python3.11 -m pip install -r /opt/ComfyUI/custom_nodes/Ruyi-Models/requirements.txt \
+        && uv pip install -r /opt/ComfyUI/custom_nodes/Ruyi-Models/requirements.txt \
         && cd /opt/ComfyUI/custom_nodes/Ruyi-Models
 
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/chengzeyi/Comfy-WaveSpeed \
         && cd /opt/ComfyUI/custom_nodes/Comfy-WaveSpeed
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
         && cd /opt/ComfyUI/custom_nodes \
         && git clone https://github.com/welltop-cn/ComfyUI-TeaCache \
-        && python3.11 -m pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-TeaCache/requirements.txt \
+        && uv pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-TeaCache/requirements.txt \
         && cd /opt/ComfyUI/custom_nodes/ComfyUI-TeaCache
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
+        && cd /opt/ComfyUI/custom_nodes \
+        && git clone https://github.com/TTPlanetPig/Comfyui_TTP_Toolset
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
+        && cd /opt/ComfyUI/custom_nodes \
+        && git clone https://github.com/smthemex/ComfyUI_StoryDiffusion \
+        && uv pip install -r /opt/ComfyUI/custom_nodes/ComfyUI_StoryDiffusion/requirements.txt \
+        && cd /opt/ComfyUI/custom_nodes/ComfyUI_StoryDiffusion
 
-#RUN set -e \
-#        && cd /opt/ComfyUI/custom_nodes \
-#        && git clone https://github.com/TTPlanetPig/Comfyui_TTP_Toolset
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
+        && cd /opt/ComfyUI/custom_nodes \
+        && git clone https://github.com/yuvraj108c/ComfyUI_InvSR \
+        && uv pip install -r /opt/ComfyUI/custom_nodes/ComfyUI_InvSR/requirements.txt \
+        && cd /opt/ComfyUI/custom_nodes/ComfyUI_InvSR
 
-
-RUN set -e \
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
 	&& cd /opt/ComfyUI/custom_nodes \
 	&& git clone https://github.com/Tenney95/ComfyUI-NodeAligner \
 	&& cd /opt/ComfyUI/custom_nodes/ComfyUI-NodeAligner
-RUN set -e \
-        && python3.11 -m pip install "numpy<2.0.0" --force --upgrade
-RUN set -e \
-        && python3.11 -m pip install torchaudio
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
+        && cd /opt/ComfyUI/custom_nodes \
+        && git clone https://github.com/smthemex/ComfyUI_Sonic \
+        && uv pip install -r /opt/ComfyUI/custom_nodes/ComfyUI_Sonic/requirements.txt \
+        && cd /opt/ComfyUI/custom_nodes/ComfyUI_Sonic
 
-CMD ["/usr/bin/bash"]
+run set -e \
+        && . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
+        && cd /opt/ComfyUI/custom_nodes \
+        && git clone https://github.com/niknah/ComfyUI-F5-TTS \
+	&& cd /opt/ComfyUI/custom_nodes/ComfyUI-F5-TTS \
+	&& git submodule update --init --recursive \
+        && uv pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-F5-TTS/requirements.txt
 
+run set -e \
+        && . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
+        && cd /opt/ComfyUI/custom_nodes \
+        && git clone https://github.com/kijai/ComfyUI-WanVideoWrapper \
+        && uv pip install -r /opt/ComfyUI/custom_nodes/ComfyUI-WanVideoWrapper/requirements.txt \
+        && cd /opt/ComfyUI/custom_nodes/ComfyUI-WanVideoWrapper
 
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
+        && uv pip install "numpy<2.0.0" --reinstall --upgrade
+run set -e \
+	&& . /root/.local/bin/env \
+        && . /opt/venv/bin/activate \
+        && uv pip install torchaudio
+run set -e \
+	&& rm -rf /opt/ComfyUI/models
 
-FROM ubuntu:jammy AS prod
-ENV PIP_EXTRA_INDEX_URL=https://download.pytorch.org/whl/cu124
+from ubuntu:jammy as prod
+env PIP_EXTRA_INDEX_URL=https://download.pytorch.org/whl/cu124
 
-RUN set -e \
+run set -e \
+	&& apt update \
+        && cd /root \
+        && apt install -y wget \
+        && wget https://astral.sh/uv/install.sh \
+        && bash install.sh \
+        && rm -rf install.sh
+
+run set -e \
         && apt update \
         && apt remove python* \
         && apt autoremove \
-        && apt -y install wget openssh-server curl git python3.11 python3-pip nginx fonts-noto-cjk-extra ffmpeg ttyd python3.11-dev libglfw3-dev libgles2 gcc make g++ aria2\
+        && apt -y install wget openssh-server curl git nginx fonts-noto-cjk-extra ffmpeg ttyd libglfw3-dev libgles2 \
         && sed -i 's/.*PermitRootLogin.*/PermitRootLogin yes/g' /etc/ssh/sshd_config \
         && mkdir /run/sshd \
         && chmod -R 700 /run/sshd \
@@ -353,44 +502,50 @@ RUN set -e \
         && echo "root:root" | chpasswd \
         && curl -fsSL https://raw.githubusercontent.com/filebrowser/get/master/get.sh | bash \
         && mkdir /opt/filebrowser \
-        && echo "/opt/ComfyUI/python-lib" > /usr/local/lib/python3.11/dist-packages/python3_path.pth \
         && rm -rf /etc/nginx/sites-enabled/* \
-        && python3.11 -m pip cache purge \
         && apt autoremove
 
-RUN set -e \
-        && aria2c --max-connection-per-server=10 --min-split-size=1M --max-concurrent-downloads=8 https://developer.download.nvidia.com/compute/cuda/12.6.3/local_installers/cuda_12.6.3_560.35.05_linux.run \
+run set -e \
+	&& apt install -y aria2 gcc make \
+	&& cd /opt \
+	&& aria2c --max-connection-per-server=10 --min-split-size=1M --max-concurrent-downloads=8 https://developer.download.nvidia.com/compute/cuda/12.6.3/local_installers/cuda_12.6.3_560.35.05_linux.run  \
         && chmod +x cuda_12.6.3_560.35.05_linux.run \
         && ./cuda_12.6.3_560.35.05_linux.run --silent --toolkit \
         && rm -rf cuda_12.6.3_560.35.05_linux.run
 
-ENV CUDA_HOME=/usr/local/cuda-12.6
+env CUDA_HOME=/usr/local/cuda-12.6
 
-COPY --from=build-libs /usr/local/lib/python3.11/dist-packages /usr/local/lib/python3.11/dist-packages
-COPY --from=build-libs /opt/ComfyUI /opt/ComfyUI
+copy --from=build-libs /opt/venv /opt/venv
+copy --from=build-libs /opt/ComfyUI /opt/ComfyUI
+copy --from=build-libs /root/.local /root/.local
 
-COPY ./installer /opt/installer
+run set -e \
+	&& apt install -y g++ language-pack-zh-hans \
+	&& locale-gen zh_CN.UTF-8 \
+	&& update-locale LANG=zh_CN.UTF-8
 
-ADD ./ComfyUI /etc/nginx/sites-enabled/
+copy ./installer /opt/installer
+
+add ./ComfyUI /etc/nginx/sites-enabled/
 
 # setup and initialize
-COPY ./docker-entrypoint.sh /
-RUN chmod +x /docker-entrypoint.sh
-ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD []
+copy ./docker-entrypoint.sh /
+run chmod +x /docker-entrypoint.sh
+entrypoint ["/docker-entrypoint.sh"]
+cmd []
 
-WORKDIR /opt/ComfyUI
+workdir /opt/ComfyUI
 
-ENV ROOT_PASSWORD=root
+env ROOT_PASSWORD=root
 
-VOLUME /root
-VOLUME /opt/installer
-VOLUME /opt/ComfyUI
-VOLUME /opt/ComfyUI/models
-VOLUME /opt/ComfyUI/custom_nodes/comfyui_controlnet_aux/ckpts
-#VOLUME /opt/ComfyUI/custom_nodes/ComfyUI-MimicMotion/models
-VOLUME /usr/local/lib/python3.11/dist-packages
-VOLUME /opt/ComfyUI/custom_nodes/ComfyUI-WD14-Tagger/models
-VOLUME /opt/ComfyUI/user
-VOLUME /opt/ComfyUI/custom_nodes/ComfyUI-Frame-Interpolation/ckpts
-VOLUME /opt/ComfyUI/custom_nodes/ComfyUI-LatentSyncWrapper/checkpoints
+volume /root
+volume /root/.local
+volume /opt/installer
+volume /opt/ComfyUI
+volume /opt/ComfyUI/models
+volume /opt/ComfyUI/custom_nodes/comfyui_controlnet_aux/ckpts
+volume /opt/venv
+volume /opt/ComfyUI/custom_nodes/ComfyUI-WD14-Tagger/models
+volume /opt/ComfyUI/user
+volume /opt/ComfyUI/custom_nodes/ComfyUI-Frame-Interpolation/ckpts
+volume /opt/ComfyUI/custom_nodes/ComfyUI-LatentSyncWrapper/checkpoints
