@@ -1,4 +1,14 @@
-UV 加速 PIP 安装ComfyUI PIP包，使用aria2下载cuda-toolkit
+ComfyUI 集成最常见插件，精简掉不常用的插件
+
+*** 更新 ***
+
+加入svd quantization
+
+加入wanvideo kijai
+
+python改为使用uv环境
+
+使用aria2下载cuda toolkit
 
 docker-compose.yml 案例
 
@@ -31,7 +41,7 @@ services:
       - NVIDIA_VISIBLE_DEVICES=all
       - HF_HOME=/opt/huggingface_hub
       # - HF_ENDPOINT=https://hf-mirror.com
-      - PIP_INDEX_URL=https://pypi.tuna.tsinghua.edu.cn/simple
+      # - PIP_INDEX_URL=https://pypi.tuna.tsinghua.edu.cn/simple
       - PIP_EXTRA_INDEX_URL=https://download.pytorch.org/whl/cu124
     #command: ["--lowvram", "--preview-method", "auto", "--use-split-cross-attention"]
     command: ["--lowvram", "--front-end-version", "latest", "--listen", "0.0.0.0", "--disable-smart-memory","--enable-cors-header" ,"'*'"]
