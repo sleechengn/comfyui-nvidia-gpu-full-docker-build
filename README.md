@@ -1,6 +1,6 @@
 ComfyUI 集成最常见插件，精简掉不常用的插件
 
-*** 更新 ***
+***更新
 
 加入svd quantization
 
@@ -9,6 +9,14 @@ ComfyUI 集成最常见插件，精简掉不常用的插件
 python改为使用uv环境
 
 使用aria2下载cuda toolkit
+
+镜像构建，可以使用你自定义的image/tag
+
+```bash
+git clone https://github.com/sleechengn/comfyui-nvidia-gpu-full-docker-build
+pushd comfyui-nvidia-gpu-full-docker-build
+docker build . --file Dockerfile.stage.build --target prod -t 192.168.13.73:5000/sleechengn/comfyui:uv
+```
 
 docker-compose.yml 案例
 
